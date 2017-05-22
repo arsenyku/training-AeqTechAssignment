@@ -31,6 +31,14 @@ enum TransformerType:String {
       case .Decepticon: return "Predaking"
     }
   }
+  
+  var fullTeamName:String
+  {
+    switch self {
+      case .Autobot: return "Autobots"
+      case .Decepticon: return "Decepticons"
+    }
+  }
 }
 
 class Transformer: CustomStringConvertible
@@ -192,18 +200,21 @@ func runBattleSimulation(data:[String]) {
   var survivors:[Transformer] = []
   
   if (result.autobotWinners.count > result.decepticonWinners.count) {
-    winningTeam = "Autobots"
-    losingTeam = "Decepticons"
     winners = autobots
     let nonFighters = decepticons.enumerated().filter({ $0.offset >= result.numberOfMatches }).map({ $0.element })
     survivors = result.decepticonWinners + nonFighters
-    
+
+    winningTeam = TransformerType.Autobot.fullTeamName
+    losingTeam = TransformerType.Decepticon.fullTeamName
+
   } else if (result.decepticonWinners.count > result.autobotWinners.count) {
-    winningTeam = "Decepticons"
-    losingTeam = "Autobots"
     winners = decepticons
     let nonFighters = autobots.enumerated().filter({ $0.offset >= result.numberOfMatches }).map({ $0.element })
     survivors = result.autobotWinners + nonFighters
+
+    winningTeam = TransformerType.Decepticon.fullTeamName
+    losingTeam = TransformerType.Autobot.fullTeamName
+
   }
   
   // NOTE: It was unclear what's supposed to be listed in the output regarding the winning team.
